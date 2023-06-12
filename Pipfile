@@ -9,6 +9,7 @@ python-telegram-bot = "*"
 asyncio = "*"
 datetime = "*"
 python-dotenv = "*"
+python-dateutil = "*"
 
 [dev-packages]
 

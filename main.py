@@ -1,6 +1,5 @@
 import os
 import sys
-
 import requests
 import asyncio
 import telegram
@@ -8,6 +7,7 @@ import json
 import datetime
 from dotenv import load_dotenv
 import calendar
+from dateutil.relativedelta import relativedelta
 
 
 def init():
@@ -135,13 +135,14 @@ def book0():
 def book25():
     # 25일에 사용
     week_day = os.getenv('week_day_bit')
+    next_month = (datetime.date.today() + relativedelta(months=1)).strftime('%Y%m')
     if not week_day:
         print("week_day_bit is null")
         return
 
     dates = []
     for i in range(int(useStDate), int(useEdDate) + 1):
-        use_date = str(int(useMonth) * 100 + i)
+        use_date = str(int(next_month) * 100 + i)
         if int(week_day[datetime.date(int(use_date[0:4]), int(use_date[4:6]), int(use_date[6:8])).weekday()]):
             dates.append(use_date)
 
