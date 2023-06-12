@@ -22,6 +22,7 @@ def init():
     global userDiv
     global reqEmpNo
     global holidays
+    global session
 
     helMngerCdMap = {
         "손애화": "HEL20220609001",
@@ -42,16 +43,18 @@ def init():
 
     holidays = get_holiday()
 
+    session = create_session()
+
 
 def create_session():
-    session = requests.session()
+    rs = requests.session()
     login_info = {
         "id": os.getenv("id"),
         "pass": os.getenv("pass")
     }
-    res = session.post("https://talk.tmaxsoft.com/loginAction.do", data=login_info)
+    res = rs.post("https://talk.tmaxsoft.com/loginAction.do", data=login_info)
 
-    return session
+    return rs
 
 
 def get_holiday():
@@ -113,7 +116,7 @@ def request_book(useDate):
           + "&reqEmpNo=" + reqEmpNo
 
     try:
-        res = create_session().get(url)
+        res = session.get(url)
         if res.json()["resultCount"] == '1':
             asyncio.run(send_message(useDate))
             print(useDate + " 예약 성공")
