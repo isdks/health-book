@@ -134,18 +134,22 @@ def book0():
 
 def book25():
     # 25일에 사용
-    week_day = os.getenv('week_day_bit')
     next_month = (datetime.date.today() + relativedelta(months=1)).strftime('%Y%m')
     useEdDate = calendar.monthrange(int(next_month[0:4]), int(next_month[4:6]))[1]
-    if not week_day:
-        print("week_day_bit is null")
+    dow_dict = {'월': 0, '화': 1, '수': 2, '목': 3, '금': 4, '토': 5}
+
+    priority = os.getenv('priority')
+    if not priority:
+        print("priority is null")
         return
 
     dates = []
-    for i in range(int(useStDate), int(useEdDate) + 1):
-        use_date = str(int(next_month) * 100 + i)
-        if int(week_day[datetime.date(int(use_date[0:4]), int(use_date[4:6]), int(use_date[6:8])).weekday()]):
-            dates.append(use_date)
+    for dow in priority:
+        wd = dow_dict[dow]
+        for i in range(int(useStDate), int(useEdDate) + 1):
+            use_date = int(next_month) * 100 + i
+            if datetime.date(use_date // 10000, use_date % 10000 // 100, use_date % 100).weekday() == wd:
+                dates.append(str(use_date))
 
     for date in dates:
         request_book(date)
