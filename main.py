@@ -136,6 +136,7 @@ def book25():
     # 25일에 사용
     week_day = os.getenv('week_day_bit')
     next_month = (datetime.date.today() + relativedelta(months=1)).strftime('%Y%m')
+    useEdDate = calendar.monthrange(int(next_month[0:4]), int(next_month[4:6]))[1]
     if not week_day:
         print("week_day_bit is null")
         return
