@@ -13,12 +13,17 @@ function printManual(){
 
 function book0(){
   COUNT=0
+  PERIOD=$1
   while :
   do
     pipenv run python main.py
     let COUNT=COUNT+1
+    echo ""
     echo attempt: $COUNT
-    sleep 1200
+    echo last attempt: `date +%r`
+    echo period: `expr ${PERIOD} / 60`분 `expr ${PERIOD} % 60`초
+    echo ""
+    sleep ${PERIOD}
   done
 }
 
@@ -27,10 +32,15 @@ function book25(){
 }
 
 ARG_1=${1}
+ARG_2=${2}
 
-if [ "${ARG_1}" == "0" ]; then
-  book0
-elif [ "${ARG_1}" == "25" ]; then
+if [ ${ARG_1} == 0 ]; then
+  if [[ ${ARG_2} =~ ^[0-9]+$ ]]; then
+    book0 ${ARG_2}
+  else
+    printManual
+  fi
+elif [ ${ARG_1} == 25 ]; then
   book25
 else
   printManual
