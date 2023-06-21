@@ -33,14 +33,17 @@ function book25(){
 
 ARG_1=${1}
 ARG_2=${2}
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-if [ ${ARG_1} == 0 ]; then
+cd $SCRIPT_DIR
+
+if [[ ${ARG_1} == 0 ]]; then
   if [[ ${ARG_2} =~ ^[0-9]+$ ]]; then
     book0 ${ARG_2}
   else
     printManual
   fi
-elif [ ${ARG_1} == 25 ]; then
+elif [[ ${ARG_1} == 25 ]]; then
   book25
 else
   printManual
