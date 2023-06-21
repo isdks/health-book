@@ -79,9 +79,9 @@ def get_holiday():
     return holiday_list
 
 
-async def send_message(useDateStr):
+async def send_message(message):
     bot = telegram.Bot(os.getenv("bot_token"))
-    await bot.sendMessage(chat_id=os.getenv("chat_id"), text=useDateStr + " 예약 성공")
+    await bot.sendMessage(chat_id=os.getenv("chat_id"), text=message)
 
 
 def is_valid_date(date):
@@ -105,7 +105,7 @@ def is_valid_date(date):
 
 def request_book(useDate):
     if not is_valid_date(useDate):
-        return
+        return False
 
     url = "https://talk.tmaxsoft.com/front/health/insertHealth.do?" \
           + "helMngerCd=" + helMngerCd \
@@ -118,18 +118,22 @@ def request_book(useDate):
     try:
         res = session.get(url)
         if res.json()["resultCount"] == '1':
-            asyncio.run(send_message(useDate))
             print(useDate + " 예약 성공")
+            return True
         else:
             print(useDate + " " + str(res.json()['errorMsg']))
+            return False
     except:
         print(useDate + ' error')
 
 
 def book0():
+    res = []
     for i in range(int(useStDate), int(useEdDate) + 1):
         use_date = str(int(useMonth) * 100 + i)
-        request_book(use_date)
+        if request_book(use_date):
+            res.append(use_date + " 예약 성공")
+    return res
 
 
 def book25():
@@ -151,16 +155,22 @@ def book25():
             if datetime.date(use_date // 10000, use_date % 10000 // 100, use_date % 100).weekday() == wd:
                 dates.append(str(use_date))
 
+    res = []
     for date in dates:
-        request_book(date)
+        if request_book(date):
+            res.append(date + " 예약 성공")
+    return res
 
 
 def main():
     init()
     if len(sys.argv) == 1:
-        book0()
+        res = book0()
     elif sys.argv[1] == '25':
-        book25()
+        res = book25()
+
+    if res:
+        asyncio.run(send_message('\n'.join(res)))
 
 
 if __name__ == "__main__":
