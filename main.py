@@ -150,7 +150,7 @@ def book25():
     dates = []
     for dow in priority:
         wd = dow_dict[dow]
-        for i in range(int(useStDate), int(useEdDate) + 1):
+        for i in range(1, int(useEdDate) + 1):
             use_date = int(next_month) * 100 + i
             if datetime.date(use_date // 10000, use_date % 10000 // 100, use_date % 100).weekday() == wd:
                 dates.append(str(use_date))
