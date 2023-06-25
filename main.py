@@ -103,9 +103,15 @@ def is_valid_date(date):
     return True
 
 
+class Result(object):
+    def __init__(self, is_sucess=False, data=""):
+        self.is_sucess = is_sucess
+        self.data = data
+
+
 def request_book(useDate):
     if not is_valid_date(useDate):
-        return False
+        return Result()
 
     url = "https://talk.tmaxsoft.com/front/health/insertHealth.do?" \
           + "helMngerCd=" + helMngerCd \
@@ -118,11 +124,13 @@ def request_book(useDate):
     try:
         res = session.get(url)
         if res.json()["resultCount"] == '1':
-            print(useDate + " 예약 성공")
-            return True
+            msg = useDate + " 예약 성공"
+            print(msg)
+            return Result(True, msg)
         else:
-            print(useDate + " " + str(res.json()['errorMsg']))
-            return False
+            msg = useDate + " " + str(res.json()['errorMsg'])
+            print(msg)
+            return Result(False, msg)
     except:
         print(useDate + ' error')
 
@@ -131,7 +139,7 @@ def book0():
     res = []
     for i in range(int(useStDate), int(useEdDate) + 1):
         use_date = str(int(useMonth) * 100 + i)
-        if request_book(use_date):
+        if request_book(use_date).is_sucess:
             res.append(use_date + " 예약 성공")
     return res
 
@@ -157,13 +165,13 @@ def book25():
 
     res = []
     for date in dates:
-        if request_book(date):
-            res.append(date + " 예약 성공")
+        res.append(request_book(date).data)
     return res
 
 
 def main():
     init()
+    res = []
     if len(sys.argv) == 1:
         res = book0()
     elif sys.argv[1] == '25':
