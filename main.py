@@ -41,7 +41,11 @@ def init():
     userDiv = "0001"
     reqEmpNo = os.getenv("empNo")
 
-    holidays = get_holiday()
+    if len(sys.argv) == 1:
+        holidays = get_holiday(useMonth)
+    elif sys.argv[1] == '25':
+        next_month = (datetime.date.today() + relativedelta(months=1)).strftime('%Y%m')
+        holidays = get_holiday(next_month)
 
     session = create_session()
 
@@ -57,11 +61,11 @@ def create_session():
     return rs
 
 
-def get_holiday():
+def get_holiday(date):
     # 한국천문연구원_특일 정보 - 공휴일 정보 조회
     key = os.getenv("key")
     apis_url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?_type=json&numOfRows=50" \
-               "&solYear=" + str(useStDate)[0:4] + "&solMonth=" + str(useStDate)[4:6] \
+               "&solYear=" + date[0:4] + "&solMonth=" + date[4:6] \
                + '&ServiceKey=' + key
     res = requests.get(apis_url)
     json_ob = json.loads(res.text)
