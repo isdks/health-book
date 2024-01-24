@@ -24,12 +24,8 @@ def init():
     global holidays
     global session
 
-    helMngerCdMap = {
-        "손애화": "HEL20220609001",
-        "이승우": "HEL20140101130",
-        "정영민": "HEL20210330001",
-        "남경인": "HEL20230125001",
-    }
+    with open('helMngerInfo.json', 'r') as file:
+        helMngerCdMap = json.load(file)
 
     helMnger = os.getenv("helMnger")
     helMngerCd = helMngerCdMap[helMnger]
