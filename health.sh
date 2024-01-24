@@ -11,6 +11,11 @@ function printManual(){
   echo "  25: use on the 25th"
 }
 
+function printManual0(){
+  echo "$(tput bold)Enter a period(s)$(tput sgr0)"
+  echo "ex) ./health.sh 0 600"
+}
+
 function book0(){
   COUNT=0
   PERIOD=$1
@@ -41,7 +46,7 @@ if [[ ${ARG_1} == 0 ]]; then
   if [[ ${ARG_2} =~ ^[0-9]+$ ]]; then
     book0 ${ARG_2}
   else
-    printManual
+    printManual0
   fi
 elif [[ ${ARG_1} == 25 ]]; then
   book25
